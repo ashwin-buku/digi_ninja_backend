@@ -4,6 +4,8 @@ import boto3
 import requests
 from flask import Flask, request
 
+import re
+
 app = Flask(__name__)
 
 
@@ -39,14 +41,19 @@ def get_table_info(blocks, ids):
         block_id = block['Id']
         if block_id in ids:
             if 'Relationships' in block:
-                if block['ColumnIndex'] == 1:
-                    item_names.append(get_key_text(blocks, block['Relationships'][0]['Ids']))
-                if block['ColumnIndex'] == 2:
-                    item_qty.append(get_key_text(blocks, block['Relationships'][0]['Ids']))
-                if block['ColumnIndex'] == 3:
-                    item_unit_price.append(get_key_text(blocks, block['Relationships'][0]['Ids']))
-                if block['ColumnIndex'] == 4:
-                    total_item_price.append(get_key_text(blocks, block['Relationships'][0]['Ids']))
+                cell_word_val = get_key_text(blocks, block['Relationships'][0]['Ids'])
+                # print(cell_word_val)
+                if block['ColumnIndex'] in [2, 3] and len(re.findall(r'[0]+', cell_word_val)) > 0 and \
+                        len(re.findall(r'[^0-9|.]', cell_word_val)) == 0:
+                    item_unit_price.append(cell_word_val)
+                elif block['ColumnIndex'] in [1, 2] and len(re.findall(r'[^0-9|.]', cell_word_val)) > 1:
+                    item_names.append(cell_word_val)
+                elif block['ColumnIndex'] == 2:
+                    item_qty.append(cell_word_val)
+                elif block['ColumnIndex'] in [3]:
+                    item_unit_price.append(cell_word_val)
+                elif block['ColumnIndex'] == 4:
+                    total_item_price.append(cell_word_val)
 
     return {'item_names': item_names, 'item_qty': item_qty, 'item_unit_price': item_unit_price,
             'total_item_price': total_item_price}
