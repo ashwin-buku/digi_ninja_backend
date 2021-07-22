@@ -9,7 +9,7 @@ Steps to create/run Python flask server:
    2) configure aws using command `aws configure`
 5. flask run
 6. Sample API request to upload image data:
-    ```curl --location --request POST 'http://localhost:4000/upload_image' \
+   `curl --location --request POST 'http://localhost:4000/upload_image' \
 --header 'content-type: application/json' \
 --data-raw '{
     "imageName" : "abc",
@@ -17,4 +17,4 @@ Steps to create/run Python flask server:
     "bookId" : "book-01",
     "userId" : "user-01",
     "uploadId" : "upload-01"
-}'```
+}'`
