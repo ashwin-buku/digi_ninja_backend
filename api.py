@@ -4,10 +4,18 @@ import boto3
 import requests
 from flask import Flask, request
 
+import firebase_admin
+from firebase_admin import credentials
+from firebase_admin import firestore
+
 import re
 
 app = Flask(__name__)
 
+cred = credentials.Certificate('/Users/tygrash/Downloads/bukuwarung-app-61d4411853b9.json')
+firebase_admin.initialize_app(cred)
+
+db = firestore.client()
 
 def get_key_text(blocks, ids):
     txt = ""
@@ -103,6 +111,9 @@ def fetch_image():
     return_json = {'imageName': content['imageName'], 'imageUrl': content['imageUrl'], 'bookId': content['bookId'],
                    'userId': content['userId'], 'uploadId': content['uploadId'], 'documentKeyValue': key_val_map,
                    'words': line_lst, 'table_info': table_info}
+
+    doc_ref = db.collection(u'users_image_upload').document(content['uploadId'])
+    doc_ref.set(return_json)
 
     return return_json
 
