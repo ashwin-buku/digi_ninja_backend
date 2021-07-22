@@ -7,7 +7,7 @@ Steps to create/run Python flask server:
 3. pip3 install pillow
 4. 1) pip3 install aws-shell
    2) configure aws using command `aws configure`
-5. flask run
+5. python3 api.py
 6. Sample API request to upload image data:
    `curl --location --request POST 'http://ec2-18-136-207-128.ap-southeast-1.compute.amazonaws.com:5000/upload_image' \
 --header 'content-type: application/json' \
